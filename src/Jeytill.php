@@ -2,6 +2,7 @@
 
 
 
+
 namespace Webfan\Webfat;
 
 use League\CommonMark\CommonMarkConverter;
@@ -136,7 +137,7 @@ class Jeytill
           return $block_html;
         }
 
-        return `{{ ${tag} }}`;        
+        return "{{ $tag }}";        
       }, $text);
     }
 
