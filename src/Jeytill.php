@@ -106,51 +106,43 @@ class Jeytill
     protected function mustache_substitute($text, $content_variable)
     {
         $self = &$this;
-          return preg_replace_callback('/{{((?:[^}]|}[^}])+)}}/', function($matches) use ($content_variable, &$self) {
+      return preg_replace_callback('/{{((?:[^}]|}[^}])+)}}/', function($matches) use ($content_variable, &$self) {
         $tag = trim($matches[1]);
 
         switch ($tag) {
-
           case 'main':
           case 'content':
-        return $content_variable;
-        //        return $Parsedown->text($c);
-
+             return $content_variable;
+          case 'host':
+             return $_SERVER['HTTP_HOST'];
           case 'theme-name':
-        return $self->options['frontmatter']['theme'];
-
+             return $self->options['frontmatter']['theme'];
           case 'root-url':
-           // return 'https://'.$_SERVER['HTTP_HOST'].$self->options['content-dir'];
+		if(!isset($self->options['frontmatter']['root-url'])){
+		  return 'https://'.$_SERVER['HTTP_HOST'];
+		}
             return $self->options['frontmatter']['root-url'];
           case 'theme-url':
         //return 'https://'.$_SERVER['HTTP_HOST'].$self->options['themes-dir'] .$self->options['frontmatter']['theme'];
             return rtrim($self->options['themes-dir'], '//\\'). '/' .$self->options['frontmatter']['theme'];
         }
+		  
         if (isset( $self->options['frontmatter'][$tag])) {
-          return  $self->options['frontmatter'][$tag];
+            return  $self->options['frontmatter'][$tag];
         }
-
-        /*
-        global $shortcodes_path;
-        if (is_file($shortcodes_path . '/' . $tag . '.php')) {
-          ob_start();
-          include $shortcodes_path . '/' . $tag . '.php';
-          return ob_get_clean();
-        }*/
 
         $block_html = $self('blocks', $tag, $content_variable);
         if ($block_html !== false) {
           return $block_html;
         }
 
-        return '';
-        //    return 'unknown tag: "' . $tag . '"';
-          }, $text);
+        return `{{ ${tag} }}`;        
+      }, $text);
     }
 
     protected function parseFrontmatter(&$text_md)
     {
-        if (strncmp($text_md, "+++", 3) === 0) {
+      if (strncmp($text_md, "+++", 3) === 0) {
         // TOML format, but only partly supported
         $endpos = strpos($text_md, '+++', 3);
         $frontmatter = trim(substr($text_md, 3, $endpos - 3));
@@ -162,15 +154,16 @@ class Jeytill
         foreach ($lines as $line) {
           // Grouping
           if (preg_match('/\[(.*)\]/', $line, $matches)) {
-        $group_prefix = $matches[1] . '.';
+              $group_prefix = $matches[1] . '.';
           }
           // String assignments
           if (preg_match('/([\w-]+)\\s*=\\s*([\'"])(.*)\\2/', $line, $matches)) {
-         $this->options['frontmatter'][$group_prefix . $matches[1]] = $matches[3];
+             $this->options['frontmatter'][$group_prefix . $matches[1]] = $matches[3];
           }
         }
-          }
-          if (strncmp($text_md, "---", 3) === 0) {
+       }
+         
+     if (strncmp($text_md, "---", 3) === 0) {
         $endpos = strpos($text_md, '---', 3);
         $frontmatter = trim(substr($text_md, 3, $endpos - 3));
         $text_md = substr($text_md, $endpos + 3);
@@ -180,7 +173,7 @@ class Jeytill
         foreach ($array as $index => $item) {
            $this->options['frontmatter'][$index] = $item;
         }
-          }
+      }
     }
 
     protected function getDefaultOptions(array $options = null)
