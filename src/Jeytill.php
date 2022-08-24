@@ -1,6 +1,7 @@
 <?php 
 
 
+
 namespace Webfan\Webfat;
 
 use League\CommonMark\CommonMarkConverter;
@@ -69,9 +70,7 @@ class Jeytill
              $content = file_get_contents($filename);
           }
           
-          if(true !== $this->allowHtml){
-		  	 $content = strip_tags($content);
-		  }
+
 
           $this->page_md = $content;
           $this->parseFrontmatter($content);
@@ -79,6 +78,11 @@ class Jeytill
           $content = $this->mustache_substitute($content, $content_variable);
 
     if ($type !== 'themes') {
+		
+          if(true !== $this->allowHtml){
+		  	 $content = strip_tags($content);
+	   }		
+		
           $content = $this->converter->convert($content);
 
         // Wrap it in template, if there is one
