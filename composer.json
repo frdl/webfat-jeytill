@@ -1,0 +1,12 @@
+{
+  "name" : "frdl/webfat-jeytill",
+  "type" : "library",
+  "description": "Class for the Webfat Markdown Hub of the Frdlweb CMS.",	  
+  "license": ["MIT"],	  
+  "require" : {
+	    "php": ">=7.1 | >=8.0"
+  },	  
+  "autoload": {
+      "classmap": ["src/"]
+  }  
+}
