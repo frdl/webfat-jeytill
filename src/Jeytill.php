@@ -46,10 +46,10 @@ class Jeytill
           else if (is_file($filename_without_extension . \DIRECTORY_SEPARATOR.'index.md')) {
               $filename = $filename_without_extension . \DIRECTORY_SEPARATOR.'index.md';
           }
-          else if (true===$this->allowHtmlFiles && is_file($filename_without_extension . '.html')) {
+          else if (('themes'===$type || true===$this->allowHtmlFiles) && is_file($filename_without_extension . '.html')) {
              $filename = $filename_without_extension . '.html';
           }
-          else if (true===$this->allowHtmlFiles && is_file($filename_without_extension . '.htm')) {
+          else if (('themes'===$type || true===$this->allowHtmlFiles) && is_file($filename_without_extension . '.htm')) {
               $filename = $filename_without_extension . '.htm';
           }
           else if (true===$this->allowPhp && is_file($filename_without_extension . '.php')) {
