@@ -1,6 +1,9 @@
 <?php 
 
-
+/**
+* Fork of: https://github.com/rosell-dk/handsdown
+* By Frdlweb
+*/
 
 
 namespace Webfan\Webfat;
